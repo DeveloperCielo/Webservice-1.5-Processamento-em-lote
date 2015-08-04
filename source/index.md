@@ -6,7 +6,7 @@ language_tabs:
 
 toc_footers:
   - <a href='/Webservice-1.5/'>Integração Webservice 1.5</a>
-  - <a href='/Webservice-1.5-Processamento-em-lote/'>Processamento em lote</a>
+  - <a href='/Webservice-1.5-FAQ'>Perguntas frequentes</a>
 
 search: true
 ---
