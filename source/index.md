@@ -26,7 +26,7 @@ Após o recebimento do arquivo, é feita uma pré-validação pela Cielo e o mes
 
 No momento da pré-validação arquivo poderá ser rejeitado, caso seja enviado em branco ou com formatação inválida.
 
-<aside class="notice">Após o prazo de duas horas o Estabelecimento Comercial poderá solicitar o download do arquivo de retorno.</aside>
+<aside class="notice">Após o prazo de doze horas o Estabelecimento Comercial poderá solicitar o download do arquivo de retorno.</aside>
 
 # Integração
 
