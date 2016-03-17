@@ -81,7 +81,7 @@ Após o envio, o Estabelecimento Comercial receberá o seguinte XML de retorno:
 ```
 
 
-O Estabelecimento Comercial poderá solicitar o download do arquivo de retorno, após duas horas no mínimo, montando a seguinte mensagem:
+O Estabelecimento Comercial poderá solicitar o download do arquivo de retorno, após doze horas no mínimo, montando a seguinte mensagem:
 
 A tabela abaixo detalha as TAGS do XML que podem ser enviadas na mensagem para definir as configurações da transação para o Processamento em Lote:
 
