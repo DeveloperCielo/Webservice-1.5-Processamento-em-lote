@@ -23,7 +23,7 @@ Upon receipt of the file, a pre-validation is done by Cielo and it goes into a q
 
 At the time of pre-validation file may be rejected if it is sent blank or invalid formatting.
 
-After a period of two hours the Commercial Establishment may request the download of the return file.
+<aside class="notice">After a period of twelve hours the Commercial Establishment may request the download of the return file.</aside>
 
 # Integration
 
