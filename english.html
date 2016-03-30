@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>Processamento em lote</title>
+
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <link href="https://www.cielo.com.br/wps/contenthandler/!ut/p/digest!3SvhW8ACOLyj_90YHxPhKQ/war/cielo-tema/themes/estatico/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="javascripts/all.js" type="text/javascript"></script>
+
+    <script>
+    $(function() {
+        setupLanguages(["xml"]);
+
+        var _wr = function(type) {
+            var orig = history[type];
+            return function() {
+                var rv = orig.apply(this, arguments);
+                var e = new Event(type);
+
+                e.arguments = arguments;
+                window.dispatchEvent(e);
+                return rv;
+            };
+        };
+
+        history.pushState = _wr('pushState'), history.replaceState = _wr('replaceState');
+
+        window.onhashchange = function() {
+            ga('send', 'event', 'navigation','click', window.location.href);
+        };
+
+        window.addEventListener('replaceState', function(e) {
+            ga('send', 'event', 'navigation','scroll', window.location.href);
+        });
+
+        window.addEventListener('languagechange', function(e) {
+            ga('send', 'event', 'language','change', e.detail);
+        });
+    });
+
+    </script>
+    <script async src='//www.google-analytics.com/analytics.js'></script>
+    <script>
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+
+    ga('create', 'UA-8516386-7', {'cookieDomain': 'auto', 'alwaysSendReferrer': true});
+    ga('create', 'UA-31855766-1', {'name': 'iMasters', 'cookieDomain': 'auto', 'alwaysSendReferrer': true});
+
+    ga("set", "transport", "beacon");
+    ga('send', 'pageview');
+    </script>
+</head>
+
+<body class="english">
+    <a href="#" id="nav-button">
+        <span>
+            NAV
+            <img src="images/navbar.png" />
+        </span>
+    </a>
+    <div class="tocify-wrapper">
+        <img src="images/logo.png" />
+        <div class="lang-selector">
+            <a href="#" data-language-name="xml">XML</a>
+        </div>
+        <div class="search">
+            <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+        <div id="toc">
+        </div>
+        <h2 class="toc-footer-title">Materiais complementares</h2>
+        <ul class="toc-footer">
+            <li><a href='/Webservice-1.5/'>Integração Webservice 1.5</a></li>
+            <li><a href='/Webservice-1.5-FAQ'>Perguntas frequentes</a></li>
+        </ul>
+        <div class="links-footer">
+            <ul class="link-list">
+                <li class="cielo"><a href="https://www.cielo.com.br/ecommerce">Cielo</a></li>
+                <li class="github"><a href="https://github.com/developercielo">Cielo</a></li>
+                <li class="desenvolvedores"><a href="https://www.cielo.com.br/desenvolvedores">Cielo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <div class="dark-box"></div>
+        <div class="content">
+                <h1 id="batch-processing">Batch Processing</h1>
+
+<p>The Batch Processing allows to transmit a set with multiple transactions in a single call, these transactions will be processed and made available through a return file in XML format.</p>
+
+<h2 id="what-is-the-batch-processing?">What is the Batch Processing?</h2>
+
+<p>The Batch Processing is based on an XML file, which must contain a list of transactions that make up the lot, these transactions should not require authentication, it will be executed directly by Cielo, after generating the file with the Commercial Establishment, should be sent to Cielo using the HTTPS protocol.</p>
+
+<p>Upon receipt of the file, a pre-validation is done by Cielo and it goes into a queue for processing, and this process is scheduled to run hourly.</p>
+
+<p>At the time of pre-validation file may be rejected if it is sent blank or invalid formatting.</p>
+
+<aside class="notice">After a period of twelve hours the Commercial Establishment may request the download of the return file.</aside>
+
+<h1 id="integration">Integration</h1>
+
+<h2 id="rules">Rules</h2>
+
+<p>Batch Processing should follow these rules:</p>
+
+<aside class="warning">The lot must respect the limits provided below. If not respected, the file will be rejected.</aside>
+
+<ol>
+<li>The XML for batch processing is set by ecm-lote.xsd that has dependence on the ecommerce.xsd.</li>
+<li>The file must respect the 20MB limit (about: 27,000 transactions).</li>
+<li>Batch processing supports the same types of online transactional operations. See table attached.
+
+<ul>
+<li>The Commercial Establishment data will be informed once inside the lot, i.e., the transaction packet belongs exclusively to the Establishment informed on file.</li>
+<li>The lot to be generated must contain one or more transactions of the same type of operation, if more than one type is sent in the batch, the file will be rejected.</li>
+</ul></li>
+<li>The naming of the file must respect the following rule and contain the following structure and field sizes:
+
+<ul>
+<li>Example: <code class="prettyprint">ECOMM_1006993069_02_20121002_0000000086.xml</code>
+
+<ul>
+<li>a) Prefix **- shall start with &ldquo;ECOMM&rdquo;;</li>
+<li>b) Membership EC** - Number of affiliation Commercial Establishment with Cielo, will contain ten digits;</li>
+<li>c) Type of operation** - must contain two digits and the code for the type of operation see table above;</li>
+<li>d) Date of file generation** - the date on which the file was generated, it must be in yyyymmdd format;</li>
+<li>e) Batch number** - lot number should be sequential and contain ten digits padded with leading zeros;</li>
+<li>f) File extension** - XML should be mandatory.</li>
+</ul></li>
+</ul></li>
+</ol>
+
+<h2 id="messages">Messages</h2>
+
+<h3 id="file-upload-message">FILE UPLOAD MESSAGE</h3>
+<pre><code class="highlight xml"><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;retorno-upload-lote</span> <span class="na">xmlns=</span><span class="s">"http://ecommerce.cbmp.com.br "</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;data-envio&gt;</span>2012-10-08T09:38:04.284-03:00<span class="nt">&lt;/data-envio&gt;</span>
+    <span class="nt">&lt;data-retorno&gt;</span>2012-10-09T09:38:04.284-03:00<span class="nt">&lt;/data-retorno&gt;</span>
+    <span class="nt">&lt;mensagem&gt;</span>Seu lote está válido para processamento. Favor aguardar o determinado para retorno.<span class="nt">&lt;/mensagem&gt;</span>
+<span class="nt">&lt;/retorno-upload-lote&gt;</span>
+</code></pre>
+
+<p>After the file generation, the Commercial Establishment must make your upload via the HTTPS protocol, using the POST method, at the following URL <a href="http://ecommerce.cbmp.com.br/lote/ecommwsecLoteUpload.do">http://ecommerce.cbmp.com.br/lote/ecommwsecLoteUpload.do</a>.</p>
+
+<p>After sending, the Commercial Establishment will receive the following XML return:</p>
+
+<h3 id="return-download-request-message">RETURN DOWNLOAD REQUEST MESSAGE</h3>
+
+<p>The Commercial Establishment may request to download the file return, after two hours at least, riding the following message:</p>
+<pre><code class="highlight xml"><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="nt">&lt;requisicao-download-retorno-lote</span> <span class="na">versao=</span><span class="s">"Versao da msg"</span> <span class="na">id=</span><span class="s">“session</span> <span class="err">id”</span><span class="nt">&gt;</span>
+   <span class="nt">&lt;dados-ec&gt;</span>
+   <span class="nt">&lt;numero&gt;</span>1006993069 <span class="nt">&lt;/numero&gt;</span>
+   <span class="nt">&lt;chave&gt;</span>25fbb997438630f30b112d033ce2e621b34f3<span class="nt">&lt;/chave&gt;</span>
+   <span class="nt">&lt;/dados-ec&gt;</span>
+   <span class="nt">&lt;numero-lote&gt;</span>0000000086<span class="nt">&lt;/numero-lote&gt;</span>
+<span class="nt">&lt;/requisicao-download-retorno-lote&gt;</span>
+</code></pre>
+
+<p>The table below details the XML tags that can be sent in the message to set the transaction settings for the Batch Processing:</p>
+
+<table><thead>
+<tr>
+<th>ELEMENT</th>
+<th>KIND</th>
+<th>MANDATORY</th>
+<th>SIZE</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Data-sending</td>
+<td></td>
+<td>n/a</td>
+<td>n/a</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>Date Return</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>Date and time that Cielo responded to the Commercial Establishment receipt of the filen/a</td>
+</tr>
+<tr>
+<td>Messagen/a</td>
+<td>n/a</td>
+<td>Reply message sent by Cielo</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Number-lot</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>n/a</td>
+<td>1..10   Batch number which was requested uploading</td>
+</tr>
+</tbody></table>
+
+<p>Upon receiving this message, Cielo e-commerce platform will check if the batch is processed and the file is generated in the outbox, with positive validations, return file is returned to the Commercial Establishment, otherwise an XML will be returned whose message reports on what stage the case is pending.</p>
+
+<p>If the file has been generated, however not in the outbox, may have been cleaning the storage, in this case, automatically, an event occurs that calls for the duplicate file. The Commercial Establishment will be informed via an XML return message; a new request shall be made later, so that a new file is generated.</p>
+
+<h1 id="attachment">Attachment</h1>
+
+<h2 id="types-of-online-transactional-operations">Types of online transactional operations</h2>
+
+<p>|TYPE OF OPERATION|CODE|
+|Authorization|02|
+|Cancellation|03|
+|Catch|04|
+|Tokenization|05|
+|Query|06|
+|Query ChSeq|07|
+|Autorization Tid|08|</p>
+
+<h2 id="response-codes">Response Codes</h2>
+
+<p>The errors that may appear in the XML message by TAG are arranged as follows:</p>
+
+<table><thead>
+<tr>
+<th>CODE</th>
+<th>ERROR</th>
+<th>DESCRIPTION</th>
+<th>ACTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>071</td>
+<td>Inconsistency in the file format   Invalid batch file is not an XML with invalid format    Review the file formatting</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>072</td>
+<td>This file has been submitted for processing    Duplicate lot, there is already a lot with the same number for EC   Review the numerical sequence of lots</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>073</td>
+<td>Invalid type of transaction    More than one type of operation in batch    Review the types of transactions that are included in the batch</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>074</td>
+<td>No existent file   File is not in the Cielo ecommerce platform Review file information previously sent</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>075</td>
+<td>Invalid XML formatting Parse error file, xml formatting in invalid file    Review the formatting of XML</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>076</td>
+<td>Incorrect naming   Incorrect file naming   Review file name structure</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>079</td>
+<td>Unexpected error   System failure  Persists, contact Support.</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>080</td>
+<td>Inconsistency in the content and nomenclature  Different types of present operations on the file content and naming    Reviewing content and nomenclature of the file</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>081</td>
+<td>Batch processing   Batch not processed yet Send new request later</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>082</td>
+<td>Expired file   Batch file expired  Send new request later</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>083</td>
+<td>Invalid batch number   Invalid batch number    Reviewing lot number</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>084</td>
+<td>Invalid number of EC   Invalid number of EC    Review the EC number</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>085</td>
+<td>Invalid Credentials    Invalid Credentials Reviewing credentials</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+
+            </div>
+            <div class="dark-box">
+                <div class="lang-selector">
+                    <a href="#" data-language-name="xml">XML</a>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
