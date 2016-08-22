@@ -36,7 +36,7 @@ Processamento em Lote deverá seguir as seguintes regras:
 
 <aside class="warning">O lote deverá respeitar os limites informados abaixo. Caso não sejam respeitados, o arquivo será rejeitado.</aside>
 
-1. O XML para processamento em lote está definido através do ecm-lote.xsd que possui dependência com o ecommerce.xsd.
+1. O XML para processamento em lote está definido através do [ecm-lote.xsd](./attachment/ecm-lote.xsd) que possui dependência com o ecommerce.xsd.
 2. O arquivo deverá respeitar o limite de 20MB (aprox.: 27.000 transações).
 3. O processamento em lote suporta os mesmos tipos de operações do transacional online. Veja a tabela em anexo.
    - Os dados do Estabelecimento Comercial serão informados uma única vez dentro do lote, ou seja, o pacote de transações pertence exclusivamente ao Estabelecimento informado no arquivo.
